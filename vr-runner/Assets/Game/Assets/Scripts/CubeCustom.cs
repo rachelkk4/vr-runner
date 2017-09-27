@@ -8,10 +8,10 @@ public class CubeCustom : MonoBehaviour {
     float RandomSpeed;
     public GameObject explode;
 
-    public Text missCountText;
+    Text missCountText;
     public static int missCount;
 
-    public Text hitCountText;
+    Text hitCountText;
     public static int hitCount;
 
     // New cube targets should fade in and be red in color.
@@ -54,13 +54,13 @@ public class CubeCustom : MonoBehaviour {
     void increaseMissCount()
     {
         missCount++;
-        missCountText.text = string.Format("Misses: {0:00}", missCount);
+        missCountText.text = string.Format("MISSES: {0:00}", missCount);
     }
 
     public void increaseHitCount()
     {
         hitCount++;
-        hitCountText.text = string.Format("Hits: {0:00}", hitCount);
+        hitCountText.text = string.Format("HITS: {0:00}", hitCount);
     }
 
     private void OnTriggerExit(Collider other)

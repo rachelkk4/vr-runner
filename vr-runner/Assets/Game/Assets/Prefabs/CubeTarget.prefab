@@ -198,5 +198,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   explode: {fileID: 1413386822282304, guid: 24dd533844d8ffc4dadd011523124cd3, type: 2}
-  missCountText: {fileID: 0}
-  hitCountText: {fileID: 0}

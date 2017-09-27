@@ -8,6 +8,12 @@ TagManager:
   - plane
   - MissText
   - HitText
+  - EndGamePanel
+  - EndScore
+  - GameHUD
+  - Countdown
+  - GameOver
+  - Time
   layers:
   - Default
   - TransparentFX

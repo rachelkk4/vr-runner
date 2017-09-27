@@ -11,8 +11,7 @@ public class RandomTargetGeneration : MonoBehaviour {
         StartCoroutine( SpawnObjects() );
 	}
 
-
-	// Update is called once per frame
+    
 	IEnumerator SpawnObjects()
     {
         while (true) {
