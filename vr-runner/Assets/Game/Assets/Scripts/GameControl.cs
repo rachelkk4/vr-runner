@@ -10,20 +10,19 @@ public class GameControl : MonoBehaviour {
     GameObject endGamePanel;
     GameObject gameOver;
     Coroutine generation;
+    bool gameEnd;
 
 	// Use this for initialization
 	void Start () {
-        gameHUD = GameObject.FindGameObjectWithTag("GameHUD");
-        Debug.Log("HUD disabled");
-        endGamePanel = GameObject.FindGameObjectWithTag("EndGamePanel");
-        Debug.Log("End panel disabled");
-        gameOver = GameObject.FindGameObjectWithTag("GameOver");
-        Debug.Log("Game over text disabled");
+        this.gameHUD = GameObject.FindGameObjectWithTag("GameHUD");
+        this.endGamePanel = GameObject.FindGameObjectWithTag("EndGamePanel");
+        this.gameOver = GameObject.FindGameObjectWithTag("GameOver");
 
         gameHUD.SetActive(false);
         endGamePanel.SetActive(false);
         gameOver.SetActive(false);
         GameObject.FindGameObjectWithTag("Countdown").GetComponent<Text>().enabled = false;
+        gameEnd = false;
 
         StartCoroutine( Opening() );
     }
@@ -33,31 +32,12 @@ public class GameControl : MonoBehaviour {
 		// When miss score reaches 3, end game
         if (CubeCustom.missCount == 3)
         {
-            StopCoroutine(generation);
-            EndGame();
+            gameEnd = true;
         }
 	}
 
     void EndGame () {
-        // Stop game - explode all currently loaded targets, change skybox color
-        foreach (GameObject target in GameObject.FindGameObjectsWithTag("target"))
-        {
-            target.GetComponent<CubeCustom>().Explode();
-        }
-
-        GameObject.FindGameObjectWithTag("Time").GetComponent<TimerDisplay>().stop = true;
-
-        Coroutine end = StartCoroutine( Ending() );
-        StopCoroutine(end);
-
-        // Display stats: time and score, then display buttons to quit or try again
-        GameObject score = GameObject.FindGameObjectWithTag("EndScore");
-        score.GetComponent<Text>().text = string.Format("Score: {0}", CubeCustom.hitCount);
-
-        // GameObject time = GameObject.FindGameObjectWithTag("EndTime");
-        // time.GetComponent<Text>().text = string.Format("Time: {0} : {1:00} : {2:000}", 
-
-        endGamePanel.SetActive(true);
+            StartCoroutine(Ending());  
     }
 
     IEnumerator Opening()
@@ -77,7 +57,7 @@ public class GameControl : MonoBehaviour {
         countdown.text = "1";
 
         yield return new WaitForSeconds(1);
-        countdown.text = "Start!";
+        countdown.text = "START!";
         yield return new WaitForSeconds(1);
 
         countdown.enabled = false;
@@ -89,16 +69,36 @@ public class GameControl : MonoBehaviour {
 
     IEnumerator Ending()
     {
+        // Stop game - explode all currently loaded targets, change skybox color
+        foreach (GameObject target in GameObject.FindGameObjectsWithTag("target"))
+        {
+            target.GetComponent<CubeCustom>().Explode();
+        }
+
+        GameObject.FindGameObjectWithTag("Time").GetComponent<TimerDisplay>().stop = true;
+
         // Display "GAME OVER" text
         gameOver.SetActive(true);
 
         yield return new WaitForSeconds(3);
         gameOver.SetActive(false);
+
+        endGamePanel.SetActive(true);
+
+        // Display stats: time and score, then display buttons to quit or try again
+        GameObject score = GameObject.FindGameObjectWithTag("EndScore");
+        score.GetComponent<Text>().text = string.Format("FINAL SCORE: {0}", CubeCustom.hitCount);
+
+        // GameObject time = GameObject.FindGameObjectWithTag("EndTime");
+        // time.GetComponent<Text>().text = string.Format("Time: {0} : {1:00} : {2:000}", 
+
+        CubeCustom.hitCount = 0;
+        CubeCustom.missCount = 0;
     }
 
     IEnumerator GenerateTargets() 
     {
-        while (true)
+        while (!gameEnd)
         {
             // generate random y and z position
             float rand1 = Random.Range(0, 2);
@@ -128,5 +128,11 @@ public class GameControl : MonoBehaviour {
 
             yield return new WaitForSeconds(Random.Range(0f, 2f));
         }
+
+        if (gameEnd)
+        {
+            StartCoroutine(Ending());
+        }
+
     }
 }
