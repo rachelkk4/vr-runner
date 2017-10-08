@@ -126,7 +126,17 @@ public class GameControl : MonoBehaviour {
             // add a new target
             Instantiate(target, new Vector3(-30f, ypos, zpos), Quaternion.identity);
 
-            yield return new WaitForSeconds(Random.Range(0f, 2f));
+            for (float i = 0; i < Random.Range(0f, 2f); i = i + 0.1f)
+            {
+                if (gameEnd)
+                {
+                    break;
+                }
+                else
+                {
+                    yield return new WaitForSeconds(0.1f);
+                }
+            }
         }
 
         if (gameEnd)
